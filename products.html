@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản phẩm - Yuumi Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Thêm CSS tùy chỉnh */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff5722;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .price-section {
+            margin: 10px 0;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+        
+        .current-price {
+            font-weight: bold;
+            color: #4CAF50;
+            font-size: 1.1rem;
+        }
+        
+        .discount-tag {
+            display: inline-block;
+            background: #ffeb3b;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        
+        /* Phần còn lại giữ nguyên */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .pagination button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .pagination button:hover {
+            background-color: #45a049;
+        }
+        
+        .pagination button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+  <header>
+      <div class="logo-container">
+          <div class="logo">
+              <img src="images/logo.png" alt="Yuumi Shop Logo">
+          </div>
+          <h1 class="shop-name">Yuumi Shop</h1>
+      </div>
+      <nav>
+          <ul>
+              <li><a href="index.html">Trang chủ</a></li>
+              <li><a href="products.html">Sản phẩm</a></li>
+              <li><a href="about.html">Về chúng tôi</a></li>
+              <li><a href="contact.html">Liên hệ</a></li>
+              <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+          </ul>
+      </nav>
+  </header>
+
+    <main>
+        <section class="products-section">
+            <h1>Thú cưng của chúng tôi</h1>
+            
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label for="pet-type">Loại thú cưng:</label>
+                    <select id="pet-type">
+                        <option value="all">Tất cả</option>
+                        <option value="dog">Chó</option>
+                        <option value="cat">Mèo</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sort-by">Sắp xếp theo:</label>
+                    <select id="sort-by">
+                        <option value="popular">Phổ biến nhất</option>
+                        <option value="price-low">Giá thấp đến cao</option>
+                        <option value="price-high">Giá cao đến thấp</option>
+                        <option value="rating">Đánh giá cao nhất</option>
+                    </select>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Tìm kiếm thú cưng...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Danh sách sản phẩm sẽ được thêm bằng JavaScript -->
+            </div>
+            
+            <div class="pagination">
+                <button id="prev-page" disabled><i class="fas fa-chevron-left"></i> Trang trước</button>
+                <span id="page-info">Trang 1 của 2</span>
+                <button id="next-page">Trang sau <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-media">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p>&copy; 2025 Yuumi Shop</p>
+    </footer>
+
+    <script>
+        // Product data với giảm giá hợp lý
+        const products = [
+        {
+          id: 1,
+          name: "Chó Alaska",
+          type: "dog",
+          breed: "Alaska Giant",
+          age: "5 tháng",
+          gender: "Đực",
+          price: 9500000,
+          discount: 0, // Không giảm giá
+          image: "images/dogs/ChoAlaska.jpg",
+          rating: 4.7,
+          description: "Chó Alaska to khỏe, lông dày, đã tiêm phòng."
+        },
+        {
+          id: 2,
+          name: "Chó Corgi",
+          type: "dog",
+          breed: "Pembroke Welsh Corgi",
+          age: "3 tháng",
+          gender: "Cái",
+          price: 8000000,
+          discount: 7000000, // Giảm 12.5%
+          image: "images/dogs/ChoCorgi.jpg",
+          rating: 4.8,
+          description: "Corgi chân ngắn, mặt ngố, siêu dễ thương."
+        },
+        {
+          id: 3,
+          name: "Chó Husky",
+          type: "dog",
+          breed: "Siberian Husky",
+          age: "4 tháng",
+          gender: "Cái",
+          price: 9000000,
+          discount: 0, // Không giảm giá
+          image: "images/dogs/ChoHusky.jpg",
+          rating: 4.5,
+          description: "Chó Husky thuần chủng, đã tiêm ngừa."
+        },
+        {
+          id: 4,
+          name: "Chó Poodle Tiny",
+          type: "dog",
+          breed: "Poodle",
+          age: "2 tháng",
+          gender: "Đực",
+          price: 6500000,
+          discount: 6000000, // Giảm 7.7%
+          image: "images/dogs/ChoPoodleTiny.jpg",
+          rating: 4.6,
+          description: "Poodle lông xoăn, dễ chăm, thích hợp sống trong nhà."
+        },
+        {
+          id: 5,
+          name: "Chó Pug",
+          type: "dog",
+          breed: "Pug mặt xệ",
+          age: "5 tháng",
+          gender: "Đực",
+          price: 7000000,
+          discount: 0, // Không giảm giá
+          image: "images/dogs/ChoPug.jpg",
+          rating: 4.5,
+          description: "Pug mặt xệ hài hước, thân thiện với trẻ em."
+        },
+        {
+          id: 6,
+          name: "Chó Shiba Inu",
+          type: "dog",
+          breed: "Shiba Nhật Bản",
+          age: "4 tháng",
+          gender: "Cái",
+          price: 12000000,
+          discount: 11040000, // Giảm 8.3%
+          image: "images/dogs/ChoShiba.jpg",
+          rating: 4.9,
+          description: "Shiba lông đỏ, năng động, thông minh."
+        },
+        {
+          id: 7,
+          name: "Chó Doberman",
+          type: "dog",
+          breed: "Doberman Pinscher",
+          age: "6 tháng",
+          gender: "Đực",
+          price: 11000000,
+          discount: 0, // Không giảm giá
+          image: "images/dogs/ChoDoberman.jpg",
+          rating: 4.6,
+          description: "Chó Doberman canh gác giỏi, trung thành, đã huấn luyện."
+        },
+        {
+          id: 8,
+          name: "Chó Pekingese",
+          type: "dog",
+          breed: "Pekingese",
+          age: "4 tháng",
+          gender: "Cái",
+          price: 6000000,
+          discount: 5500000, // Giảm 8.3%
+          image: "images/dogs/ChoPekingese.jpg",
+          rating: 4.3,
+          description: "Pekingese nhỏ gọn, lông dài xù, dễ nuôi."
+        },
+        {
+          id: 9,
+          name: "Mèo Anh Lông Ngắn",
+          type: "cat",
+          breed: "British Shorthair",
+          age: "2 tháng",
+          gender: "Cái",
+          price: 4500000,
+          discount: 0, // Không giảm giá
+          image: "images/cats/MeoALN.jpg",
+          rating: 4.6,
+          description: "Mèo lông ngắn mặt tròn, thân thiện, dễ nuôi."
+        },
+        {
+          id: 10,
+          name: "Mèo Ba Tư",
+          type: "cat",
+          breed: "Persian",
+          age: "3 tháng",
+          gender: "Đực",
+          price: 5000000,
+          discount: 4500000, // Giảm 10%
+          image: "images/cats/MeoBaTu.jpg",
+          rating: 4.7,
+          description: "Mèo lông dài, điềm đạm, hợp sống trong nhà."
+        },
+        {
+          id: 11,
+          name: "Mèo Tai Cụp",
+          type: "cat",
+          breed: "Scottish Fold",
+          age: "3 tháng",
+          gender: "Cái",
+          price: 8000000,
+          discount: 0, // Không giảm giá
+          image: "images/cats/MeoTaiCup.jpg",
+          rating: 4.9,
+          description: "Tai cụp đặc trưng, ngoan hiền, dễ chăm sóc."
+        },
+        {
+          id: 12,
+          name: "Mèo Bengal",
+          type: "cat",
+          breed: "Bengal",
+          age: "3 tháng",
+          gender: "Đực",
+          price: 8500000,
+          discount: 8000000, // Giảm 5.9%
+          image: "images/cats/MeoBengal.jpg",
+          rating: 4.7,
+          description: "Lông vằn như báo, siêu năng động và thông minh."
+        },
+        {
+          id: 13,
+          name: "Mèo Sphynx",
+          type: "cat",
+          breed: "Sphynx",
+          age: "4 tháng",
+          gender: "Cái",
+          price: 10000000,
+          discount: 0, // Không giảm giá
+          image: "images/cats/MeoSphynx.jpg",
+          rating: 4.5,
+          description: "Mèo không lông độc lạ, thân thiện, quấn chủ."
+        },
+        {
+          id: 14,
+          name: "Mèo Ragdoll",
+          type: "cat",
+          breed: "Ragdoll",
+          age: "3 tháng",
+          gender: "Cái",
+          price: 9000000,
+          discount: 8500000, // Giảm 5.6%
+          image: "images/cats/MeoRagdoll.jpg",
+          rating: 4.8,
+          description: "Mèo lông dài, mềm như búp bê, cực kỳ hiền."
+        },
+        {
+          id: 15,
+          name: "Mèo Munchkin",
+          type: "cat",
+          breed: "Munchkin",
+          age: "2 tháng",
+          gender: "Đực",
+          price: 7500000,
+          discount: 0,
+          image: "images/cats/MeoMunchkin.jpg",
+          rating: 4.7,
+          description: "Mèo chân ngắn cực kỳ đáng yêu, năng động và thân thiện."
+        },
+        {
+          id: 16,
+          name: "Mèo Xiêm",
+          type: "cat",
+          breed: "Siamese",
+          age: "5 tháng",
+          gender: "Cái",
+          price: 4000000,
+          discount: 0,
+          image: "images/cats/MeoXiem.jpg",
+          rating: 4.4,
+          description: "Mèo Xiêm thông minh, nói nhiều, thích gần gũi người."
+        },
+        {
+          id: 17,
+          name: "Mèo Maine Coon",
+          type: "cat",
+          breed: "Maine Coon",
+          age: "6 tháng",
+          gender: "Đực",
+          price: 12000000,
+          discount: 0,
+          image: "images/cats/MeoMaineCoon.jpg",
+          rating: 4.9,
+          description: "Mèo khổng lồ lông dài, hiền lành, cực kỳ thông minh."
+        },
+        {
+          id: 18,
+          name: "Mèo Abyssinian",
+          type: "cat",
+          breed: "Abyssinian",
+          age: "4 tháng",
+          gender: "Cái",
+          price: 7800000,
+          discount: 0,
+          image: "images/cats/MeoAbyssinian.jpg",
+          rating: 4.6,
+          description: "Mèo lanh lợi, yêu vận động, bộ lông óng mượt."
+        },
+        {
+          id: 19,
+          name: "Chó Beagle",
+          type: "dog",
+          breed: "Beagle",
+          age: "4 tháng",
+          gender: "Đực",
+          price: 7500000,
+          discount: 6975000,
+          image: "images/dogs/ChoBeagle.jpg",
+          rating: 4.5,
+          description: "Beagle nhanh nhẹn, thân thiện, dễ huấn luyện."
+        },
+        {
+          id: 20,
+          name: "Chó Chihuahua",
+          type: "dog",
+          breed: "Chihuahua Mini",
+          age: "2 tháng",
+          gender: "Cái",
+          price: 5500000,
+          discount: 0,
+          image: "images/dogs/ChoChihuahua.jpg",
+          rating: 4.3,
+          description: "Chó nhỏ gọn, lanh lợi, sống tốt trong không gian nhỏ."
+        }
+        ];
+
+        // Phân trang
+        let currentPage = 1;
+        const productsPerPage = 4;
+        let filteredProducts = [...products];
+
+        // Hiển thị sản phẩm
+        function displayProducts() {
+            const productsGrid = document.querySelector('.products-grid');
+            productsGrid.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = filteredProducts.slice(startIndex, endIndex);
+            
+            if (productsToShow.length === 0) {
+                productsGrid.innerHTML = '<p class="no-results">Không tìm thấy sản phẩm phù hợp.</p>';
+                return;
+            }
+            
+            productsToShow.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
+                        ${product.discount ? `<span class="discount-badge">Giảm ${((product.price - product.discount)/product.price*100).toFixed(0)}%</span>` : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p class="breed">Giống: ${product.breed}</p>
+                        <p class="age-gender">${product.age} - ${product.gender}</p>
+                        <div class="price-section">
+                            ${product.discount ? `<span class="original-price">${product.price.toLocaleString()} VND</span>` : ''}
+                            <span class="current-price">${(product.discount || product.price).toLocaleString()} VND</span>
+                        </div>
+                        <div class="rating">
+                            ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                            <span class="rating-count">(${Math.floor(Math.random() * 50) + 10})</span>
+                        </div>
+                        <button onclick="addToCart(${product.id})">Thêm vào giỏ</button>
+                        <a href="products.html?id=${product.id}" class="view-detail">Xem chi tiết</a>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+            
+            // Cập nhật thông tin phân trang
+            updatePaginationInfo();
+        }
+
+        // Cập nhật thông tin phân trang
+        function updatePaginationInfo() {
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            document.getElementById('page-info').textContent = `Trang ${currentPage} của ${totalPages}`;
+            
+            document.getElementById('prev-page').disabled = currentPage === 1;
+            document.getElementById('next-page').disabled = currentPage === totalPages;
+        }
+
+        // Lọc và sắp xếp sản phẩm
+        function filterAndSortProducts() {
+            const typeFilter = document.getElementById('pet-type').value;
+            const sortBy = document.getElementById('sort-by').value;
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            
+            filteredProducts = [...products];
+            
+            // Lọc theo loại
+            if (typeFilter !== 'all') {
+                filteredProducts = filteredProducts.filter(p => p.type === typeFilter);
+            }
+            
+            // Lọc theo tìm kiếm
+            if (searchQuery) {
+                filteredProducts = filteredProducts.filter(p => {
+                    const searchLower = searchQuery.toLowerCase();
+                    return (
+                        p.name.toLowerCase().includes(searchLower) || 
+                        p.breed.toLowerCase().includes(searchLower) ||
+                        (p.description && p.description.toLowerCase().includes(searchLower))
+                    );
+                });
+            }
+            
+            // Sắp xếp
+            switch (sortBy) {
+                case 'price-low':
+                    filteredProducts.sort((a, b) => (a.discount || a.price) - (b.discount || b.price));
+                    break;
+                case 'price-high':
+                    filteredProducts.sort((a, b) => (b.discount || b.price) - (a.discount || a.price));
+                    break;
+                case 'rating':
+                    filteredProducts.sort((a, b) => b.rating - a.rating);
+                    break;
+                default:
+                    filteredProducts.sort((a, b) => a.id - b.id);
+            }
+            
+            currentPage = 1; // Reset về trang đầu tiên khi lọc/sắp xếp
+            displayProducts();
+        }
+
+        // Xử lý phân trang
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayProducts();
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayProducts();
+            }
+        });
+
+        // Xử lý tìm kiếm
+        document.getElementById('search-btn').addEventListener('click', filterAndSortProducts);
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') filterAndSortProducts();
+        });
+
+        // Xử lý thay đổi bộ lọc
+        document.getElementById('pet-type').addEventListener('change', filterAndSortProducts);
+        document.getElementById('sort-by').addEventListener('change', filterAndSortProducts);
+
+        // Thêm vào giỏ hàng
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+        }
+
+        // Hiển thị sản phẩm khi trang được tải
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            
+            if (productId) {
+                const product = products.find(p => p.id == productId);
+                if (product) {
+document.querySelector('.products-section').innerHTML = `
+    <div class="product-detail">
+        <div class="detail-images">
+            <div class="main-image">
+                <img src="${product.image}" alt="${product.name}">
+            </div>
+        </div>
+        <div class="detail-info">
+            <h1>${product.name}</h1>
+            <div class="meta">
+                <span class="breed">Giống: ${product.breed}</span>
+                <span class="age">Tuổi: ${product.age}</span>
+                <span class="gender">Giới tính: ${product.gender}</span>
+            </div>
+            <div class="rating">
+                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                <span class="rating-count">(${Math.floor(Math.random() * 50) + 10} đánh giá)</span>
+            </div>
+            <div class="price-section">
+                ${product.discount ? `<span class="original-price">${product.price.toLocaleString()} VND</span>` : ''}
+                <span class="current-price">${(product.discount || product.price).toLocaleString()} VND</span>
+                ${product.discount ? `<span class="discount-tag">Tiết kiệm ${(product.price - product.discount).toLocaleString()} VND</span>` : ''}
+            </div>
+            <div class="actions">
+                <button onclick="addToCart(${product.id})">Thêm vào giỏ</button>
+                <button class="buy-now">Mua ngay</button>
+            </div>
+            <div class="description">
+                <h3>Mô tả sản phẩm</h3>
+                <p>${product.description}</p>
+            </div>
+        </div>
+    </div>
+`;
+                }
+            } else {
+                filterAndSortProducts();
+            }
+        });
+    </script>
+</body>
+</html>

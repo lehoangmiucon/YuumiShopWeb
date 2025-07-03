@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - Yuumi Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+  <header>
+      <div class="logo-container">
+          <div class="logo">
+              <img src="images/logo.png" alt="Yuumi Shop Logo">
+          </div>
+          <h1 class="shop-name">Yuumi Shop</h1>
+      </div>
+      <nav>
+          <ul>
+              <li><a href="index.html">Trang chủ</a></li>
+              <li><a href="products.html">Sản phẩm</a></li>
+              <li><a href="about.html">Về chúng tôi</a></li>
+              <li><a href="contact.html">Liên hệ</a></li>
+              <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+          </ul>
+      </nav>
+  </header>
+
+    <main>
+        <section class="cart">
+            <h2>Giỏ hàng của bạn</h2>
+            <div class="cart-items">
+                <!-- Cart items will be added by JavaScript -->
+            </div>
+            
+            <!-- Mã giảm giá -->
+            <div class="coupon-section">
+                <h3>Mã giảm giá</h3>
+                <div class="coupon-input">
+                    <input type="text" id="coupon-code" placeholder="Nhập mã giảm giá">
+                    <button id="apply-coupon">Áp dụng</button>
+                </div>
+                <div id="coupon-message"></div>
+                <div class="available-coupons">
+                    <p>Mã giảm giá có sẵn:</p>
+                    <ul id="coupon-list">
+                        <li data-code="YUUMI10" data-discount="10">YUUMI10 - Giảm 10%</li>
+                        <li data-code="PETLOVER15" data-discount="15">PETLOVER15 - Giảm 15%</li>
+                        <li data-code="FREESHIP" data-discount="50000">FREESHIP - Miễn phí vận chuyển 50,000đ</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Thông tin khách hàng -->
+            <div class="customer-info hidden" id="customerInfo">
+                <h3>Thông tin giao hàng</h3>
+                <form id="customer-form">
+                    <div class="form-group">
+                        <label for="fullname">Họ và tên*</label>
+                        <input type="text" id="fullname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại*</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ giao hàng*</label>
+                        <textarea id="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-method">Phương thức thanh toán*</label>
+                        <select id="payment-method" required>
+                            <option value="">-- Chọn phương thức --</option>
+                            <option value="cash">Tiền mặt khi nhận hàng</option>
+                            <option value="bank">Chuyển khoản ngân hàng</option>
+                            <option value="momo">Ví điện tử Momo</option>
+                            <option value="credit">Thẻ tín dụng</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Ghi chú</label>
+                        <textarea id="notes" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tổng kết đơn hàng -->
+            <div class="cart-summary">
+                <h3>Tổng cộng: <span id="subtotal-amount">0 VND</span></h3>
+                <div class="discount-info">
+                    <p>Giảm giá: <span id="discount-amount">0 VND</span></p>
+                </div>
+                <div class="total-info">
+                    <h3>Thành tiền: <span id="total-amount">0 VND</span></h3>
+                </div>
+                <button id="proceed-checkout">Tiến hành thanh toán</button>
+                <button id="complete-checkout" class="hidden">Hoàn tất đơn hàng</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-media">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p>&copy; 2025 Yuumi Shop</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+</body>
+</html>

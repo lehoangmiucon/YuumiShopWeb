@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuumi Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* CSS for Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        }
+        
+        .chatbot-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-body {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .chatbot-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .chatbot-input button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 80%;
+        }
+        
+        .bot-message {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+        }
+        
+        .user-message {
+            background-color: #4CAF50;
+            color: white;
+            align-self: flex-end;
+        }
+        
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1001;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Phần header giữ nguyên -->
+<header>
+  
+    <div class="logo-container">
+        <div class="logo">
+            <img src="images/logo.png" alt="Yuumi Shop Logo">
+        </div>
+        <h1 class="shop-name">Yuumi Shop</h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="products.html">Sản phẩm</a></li>
+            <li><a href="about.html">Về chúng tôi</a></li>
+            <li><a href="contact.html">Liên hệ</a></li>
+            <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            <!-- Thêm nút tài khoản với dropdown -->
+            <li class="account-dropdown">
+                <a href="#"><i class="fas fa-user"></i> Tài khoản <i class="fas fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="login.html">Đăng nhập</a>
+                    <a href="register.html">Đăng ký</a>
+                    <a href="account.html" id="accountLink" style="display:none;">Tài khoản của tôi</a>
+                    <a href="#" id="logoutLink" style="display:none;">Đăng xuất</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+    <main>
+        <!-- Phần nội dung chính giữ nguyên -->
+        <section class="banner">
+            <img src="images/banner1.png" alt="Banner Yuumi Shop">
+        </section>
+
+        <section class="featured-pets">
+            <h2>Thú cưng nổi bật</h2>
+            <div class="pet-grid">
+                <!-- Các thẻ pet sẽ được thêm bằng JavaScript -->
+            </div>
+        </section>
+
+        <section class="promotion">
+            <h2>Khuyến mãi đặc biệt</h2>
+            <div class="promo-code">
+                <input type="text" id="promo-input" placeholder="Nhập MGG (nếu có)">
+                <button id="apply-promo">Áp dụng</button>
+            </div>
+        </section>
+
+      <section class="reviews">
+          <h2>Đánh Giá Của Khách Hàng</h2>
+          <div class="review-list"></div>
+          <button id="add-review">Viết Đánh Giá</button>
+      </section>
+    </main>
+
+    <!-- Phần footer giữ nguyên -->
+    <footer>
+        <div class="social-media">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p>&copy; 2025 Yuumi Shop</p>
+    </footer>
+
+    <!-- Chatbot Toggle Button -->
+    <div class="chatbot-toggle" id="chatbotToggle">
+        <i class="fas fa-robot" style="font-size: 24px;"></i>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div class="chatbot-container hidden" id="chatbotContainer">
+        <div class="chatbot-header" id="chatbotHeader">
+            <h3>Trợ lý Yuumi</h3>
+            <i class="fas fa-times" id="closeChatbot"></i>
+        </div>
+        <div class="chatbot-body">
+            <div class="chatbot-messages" id="chatbotMessages">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi của bạn...">
+                <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+<script>
+    // Chatbot functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const sendMessageBtn = document.getElementById('sendMessage');
+        
+        // Menu options for quick selection
+        const menuOptions = [
+            'Giờ mở cửa',
+            'Khuyến mãi',
+            'Địa chỉ cửa hàng',
+            'Dịch vụ giao hàng',
+            'Phương thức thanh toán',
+            'Hotline hỗ trợ',
+            'Tư vấn thú cưng'
+        ];
+        
+        // Responses for each menu option
+        const responses = {
+            'Giờ mở cửa': "Yuumi Shop mở cửa từ 8:00 sáng đến 9:00 tối tất cả các ngày trong tuần, kể cả thứ 7 và chủ nhật.",
+            'Khuyến mãi': "Hiện chúng tôi đang có các chương trình khuyến mãi:\n- Giảm 10% cho giống mèo Anh lông ngắn\n- Tặng phụ kiện khi mua chó Alaska\n- Giảm 15% cho khách hàng thân thiết\nBạn có thể xem chi tiết tại trang Sản phẩm hoặc nhập mã tại mục Khuyến mãi!",
+            'Địa chỉ cửa hàng': "Yuumi Shop có địa chỉ tại:\n- Cơ sở 1: 123 Đường Pet Lover, Quận 1, TP.HCM\n- Cơ sở 2: 456 Đường Animal Care, Quận 3, TP.HCM\nBạn muốn đến cơ sở nào ạ?",
+            'Dịch vụ giao hàng': "Chúng tôi cung cấp dịch vụ giao thú cưng tận nhà:\n- Phí giao hàng: 50.000đ - 200.000đ tùy khoảng cách\n- Giao hàng trong 2h với đơn nội thành\n- Đảm bảo an toàn và thoải mái cho thú cưng",
+            'Phương thức thanh toán': "Yuumi Shop chấp nhận các hình thức thanh toán:\n1. Tiền mặt khi nhận hàng\n2. Chuyển khoản ngân hàng\n3. Ví điện tử (Momo, ZaloPay)\n4. Thẻ tín dụng (Visa, Mastercard)",
+            'Hotline hỗ trợ': "Bạn có thể liên hệ với chúng tôi qua:\n- Hotline: 1900 1234 (24/7)\n- Zalo: 0912 345 678\n- Facebook: fb.com/yuumishop\nChúng tôi luôn sẵn sàng hỗ trợ bạn!",
+            'Tư vấn thú cưng': "Bạn cần tư vấn về:\n1. Chọn giống phù hợp\n2. Cách chăm sóc\n3. Chế độ dinh dưỡng\n4. Vấn đề sức khỏe\nVui lòng cho biết bạn quan tâm đến vấn đề nào?"
+        };
+        
+        // Toggle chatbot visibility
+        chatbotToggle.addEventListener('click', function() {
+            chatbotContainer.classList.toggle('hidden');
+            if (!chatbotContainer.classList.contains('hidden')) {
+                showWelcomeMessage();
+            }
+        });
+        
+        closeChatbot.addEventListener('click', function() {
+            chatbotContainer.classList.add('hidden');
+        });
+        
+        // Auto-open chatbot after 10 seconds
+        setTimeout(() => {
+            if (!localStorage.getItem('chatbotShown')) {
+                chatbotContainer.classList.remove('hidden');
+                localStorage.setItem('chatbotShown', 'true');
+                showWelcomeMessage();
+            }
+        }, 10000);
+        
+        // Show welcome message with menu options
+        function showWelcomeMessage() {
+            addBotMessage("Xin chào! Tôi là trợ lý ảo của Yuumi Shop. Bạn cần hỗ trợ thông tin gì ạ?");
+            
+            // Show quick menu options after a short delay
+            setTimeout(() => {
+                addBotMessage("Bạn có thể chọn nhanh các mục sau hoặc nhập câu hỏi của bạn:");
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'quick-options';
+                
+                menuOptions.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.textContent = option;
+                    btn.className = 'option-btn';
+                    btn.addEventListener('click', () => {
+                        addUserMessage(option);
+                        setTimeout(() => {
+                            handleMenuSelection(option);
+                        }, 500);
+                    });
+                    optionsDiv.appendChild(btn);
+                });
+                
+                chatbotMessages.appendChild(optionsDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }, 800);
+        }
+        
+        // Handle menu selection
+        function handleMenuSelection(option) {
+            if (responses[option]) {
+                addBotMessage(responses[option]);
+                
+                // Additional follow-up for some options
+                if (option === 'Tư vấn thú cưng') {
+                    setTimeout(() => {
+                        addBotMessage("Vui lòng chọn số tương ứng với nhu cầu của bạn hoặc mô tả chi tiết hơn.");
+                    }, 800);
+                } else if (option === 'Địa chỉ cửa hàng') {
+                    setTimeout(() => {
+                        addBotMessage("Bạn có cần hướng dẫn đường đi không ạ?");
+                    }, 1000);
+                }
+            } else {
+                addBotMessage("Xin lỗi, tôi chưa hiểu yêu cầu của bạn. Vui lòng chọn lại từ menu hoặc nhập câu hỏi cụ thể hơn.");
+            }
+        }
+        
+        // Send message function
+        function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (message !== '') {
+                addUserMessage(message);
+                chatbotInput.value = '';
+                
+                // Auto reply after 1 second
+                setTimeout(() => {
+                    handleUserMessage(message);
+                }, 1000);
+            }
+        }
+        
+        // Handle user message
+        function handleUserMessage(message) {
+            // Check if message matches any menu option
+            let found = false;
+            for (const option of menuOptions) {
+                if (message.includes(option) || option.includes(message)) {
+                    handleMenuSelection(option);
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                // Handle numeric selection for pet consultation
+                if (/[1-7]/.test(message) && chatbotMessages.lastElementChild?.textContent.includes("Vui lòng chọn số")) {
+                    const options = [
+                        "Bạn nên chọn giống thú cưng dựa trên: không gian sống, thời gian chăm sóc, và ngân sách. Bạn có thể cho biết thêm về điều kiện của bạn?",
+                        "Chăm sóc thú cưng cần chú ý: vệ sinh, tiêm phòng định kỳ, vận động đều đặn. Bạn cần tư vấn cụ thể về loại nào?",
+                        "Dinh dưỡng phụ thuộc vào độ tuổi và giống loài. Bạn đang nuôi thú cưng nào và bao nhiêu tháng tuổi?",
+                        "Vấn đề sức khỏe cần được bác sĩ thú y thăm khám trực tiếp. Bạn có thể mô tả triệu chứng hoặc đặt lịch khám tại cửa hàng."
+                    ];
+                    const index = parseInt(message) - 1;
+                    if (index >= 0 && index < options.length) {
+                        addBotMessage(options[index]);
+                    } else {
+                        addBotMessage("Vui lòng chọn số từ 1 đến 4 hoặc mô tả chi tiết hơn nhu cầu của bạn.");
+                    }
+                } else {
+                    addBotMessage("Tôi có thể giúp gì cho bạn về thú cưng? Bạn vui lòng chọn từ menu hoặc nhập câu hỏi cụ thể hơn.");
+                    showQuickOptions();
+                }
+            }
+        }
+        
+        // Show quick options again
+        function showQuickOptions() {
+            setTimeout(() => {
+                addBotMessage("Bạn có thể chọn nhanh các mục sau:");
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'quick-options';
+                
+                menuOptions.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.textContent = option;
+                    btn.className = 'option-btn';
+                    btn.addEventListener('click', () => {
+                        addUserMessage(option);
+                        setTimeout(() => {
+                            handleMenuSelection(option);
+                        }, 500);
+                    });
+                    optionsDiv.appendChild(btn);
+                });
+                
+                chatbotMessages.appendChild(optionsDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }, 800);
+        }
+        
+        function checkLoginBeforeReview() {
+    const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    if (!currentUser) {
+        if (confirm('Bạn cần đăng nhập để đánh giá. Đến trang đăng nhập?')) {
+            window.location.href = 'login.html?redirect=index.html';
+        }
+        return;
+    }
+    // Nếu đã đăng nhập thì hiển thị form đánh giá
+    addReview();
+}
+
+        // Add message to chat
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function addUserMessage(text) {
+            addMessage(text, true);
+        }
+        
+        function addBotMessage(text) {
+            // Handle line breaks in bot messages
+            const lines = text.split('\n');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'bot-message');
+            
+            lines.forEach((line, index) => {
+                if (index > 0) messageDiv.appendChild(document.createElement('br'));
+                messageDiv.appendChild(document.createTextNode(line));
+            });
+            
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        // Event listeners
+        sendMessageBtn.addEventListener('click', sendMessage);
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    });
+</script>
+</body>
+</html>
