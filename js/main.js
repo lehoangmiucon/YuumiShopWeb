@@ -36,6 +36,24 @@ const pets = [
         image: "images/cats/MeoBaTu.jpg",
         rating: 5
     },
+
+    {
+        id: 5,
+        name: "Chó Shiba Inu",
+        type: "dog",
+        price: 12000000,
+        image: "images/dogs/ChoShiba.jpg",
+        rating: 4
+    },
+
+    {
+        id: 6,
+        name: "Chó Pug",
+        type: "dog",
+        price: 7000000,
+        image: "images/dogs/ChoPug.jpg",
+        rating: 4
+    },
     // Add more pets as needed
 ];
 
@@ -86,17 +104,12 @@ function displayReviews() {
     const reviewList = document.querySelector('.review-list');
     reviewList.innerHTML = '';
     
-    if (reviews.length === 0) {
-        reviewList.innerHTML = '<p class="no-reviews">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá!</p>';
-        return;
-    }
-    
     reviews.forEach(review => {
         const reviewItem = document.createElement('div');
         reviewItem.className = 'review-item';
         
         // Format ngày tháng
-        const reviewDate = new Date(review.date);
+        const reviewDate = review.date ? new Date(review.date) : new Date();
         const dateString = reviewDate.toLocaleDateString('vi-VN', {
             day: '2-digit',
             month: '2-digit',
