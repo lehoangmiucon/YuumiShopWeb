@@ -1,4 +1,3 @@
-
 // Sample data for pets
 const pets = [
     {
